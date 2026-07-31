@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sam's wedding budget</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    --rose:      #d4a5a5;
+    --clay:      #b87d6d;
+    --sand:      #e8d5c4;
+    --burgundy:  #5d2e46;
+    --sand-light:#fdf6f0;
+    --sand-mid:  #f0e0d4;
+    --border:    #ddc5b4;
+    --text-main: #3d1f2e;
+    --text-muted:#8a6260;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Playfair Display', serif; background: #f5ebe2; color: var(--text-main); font-size: 14px; min-height: 100vh; }
+
+  .app { max-width: 960px; margin: 0 auto; padding: 28px 20px 52px; }
+
+  .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
+  .page-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 600; color: var(--burgundy); display: flex; align-items: center; gap: 8px; }
+  .heart { color: var(--clay); }
+  .page-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; letter-spacing: 0.03em; }
+
+  .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+  .metric { background: var(--sand-light); border: 0.5px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .metric-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .metric-value { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 500; color: var(--burgundy); }
+  .metric-value.good { color: #6b8f71; }
+  .metric-value.warn { color: #a0692a; }
+  .metric-value.over { color: #8c2e2e; }
+
+  .guest-panel { background: var(--sand-light); border: 0.5px solid var(--border); border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 14px; }
+  .guest-icon { font-size: 18px; }
+  .guest-panel label { font-size: 13px; color: var(--text-muted); white-space: nowrap; }
+  .guest-panel input[type=range] { flex: 1; accent-color: var(--clay); cursor: pointer; }
+  .guest-count-val { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 500; color: var(--burgundy); min-width: 90px; text-align: right; }
+
+  .budget-edit { display: flex; align-items: center; gap: 8px; }
+  .budget-edit label { font-size: 12px; color: var(--text-muted); }
+  .budget-edit input { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 500; color: var(--burgundy); border: 0.5px solid var(--border); border-radius: 6px; padding: 4px 8px; width: 130px; text-align: right; background: var(--sand-light); }
+  .budget-edit input:focus { outline: none; border-color: var(--clay); }
+
+  .table-wrap { background: var(--sand-light); border: 0.5px solid var(--border); border-radius: 12px; overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  thead th { background: var(--sand); color: var(--burgundy); font-family: 'Playfair Display', serif; font-weight: 600; font-size: 13px; padding: 9px 14px; text-align: left; border-bottom: 0.5px solid var(--border); }
+  thead th.num { text-align: center; }
+  tbody tr { border-bottom: 0.5px solid #e8d5c4; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody td { padding: 9px 14px; vertical-align: middle; overflow: hidden; font-size: 13px; }
+  td.num { text-align: center; }
+
+  .cat-row { cursor: pointer; user-select: none; }
+  .cat-row td { background: var(--sand-mid); color: #9e6b7a; font-family: 'Playfair Display', serif; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; padding: 7px 14px; }
+  .cat-row:hover td { background: #e6cfc2; }
+
+  .expense-name { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+  .badge-variable { font-size: 10px; background: #f0ddd8; color: var(--clay); padding: 2px 7px; border-radius: 4px; font-weight: 700; white-space: nowrap; letter-spacing: 0.02em; }
+  .badge-fixed { font-size: 10px; background: #ecddd8; color: var(--burgundy); padding: 2px 7px; border-radius: 4px; font-weight: 700; white-space: nowrap; letter-spacing: 0.02em; }
+
+  .editable { background: transparent; border: 0.5px solid transparent; border-radius: 4px; padding: 3px 6px; font-size: 13px; font-family: 'Playfair Display', serif; color: var(--text-main); width: 90px; text-align: center; transition: border-color 0.15s; }
+  .editable:hover { border-color: var(--border); background: var(--sand-mid); }
+  .editable:focus { outline: none; border-color: var(--clay); background: #fff; }
+
+  .tip-input { background: transparent; border: 0.5px solid transparent; border-radius: 4px; padding: 3px 6px; font-size: 13px; font-family: 'Playfair Display', serif; color: var(--text-main); width: 64px; text-align: center; transition: border-color 0.15s; }
+  .tip-input:hover { border-color: var(--border); background: var(--sand-mid); }
+  .tip-input:focus { outline: none; border-color: var(--clay); background: #fff; }
+
+  .total-cell { font-weight: 400; color: var(--text-main); }
+  .total-cell.has-tip { color: var(--text-main); font-weight: 400; }
+
+  .cost-cell { display: flex; align-items: center; justify-content: flex-end; }
+  .cost-cell .editable { width: 100%; text-align: center; }
+  td.lock-col { text-align: center; padding: 4px 6px !important; width: 3%; }
+  .lock-btn { background: transparent; border: none; cursor: pointer; font-size: 13px; line-height: 1; padding: 3px 4px; border-radius: 4px; opacity: 0; transition: opacity 0.15s; }
+  tr:hover .lock-btn { opacity: 0.55; }
+  .lock-btn:hover { opacity: 1 !important; background: var(--sand-mid); }
+  .lock-btn.locked { opacity: 1; }
+  .locked-rec-val { display: inline-block; padding: 2px 4px; color: var(--text-main); font-weight: 400; }
+
+  .name-input { background: transparent; border: 0.5px solid transparent; border-radius: 4px; padding: 2px 5px; font-size: 13px; font-family: 'Playfair Display', serif; color: var(--text-main); min-width: 80px; width: auto; max-width: 160px; transition: border-color 0.15s; }
+  .name-input:hover { border-color: var(--border); background: var(--sand-mid); }
+  .name-input:focus { outline: none; border-color: var(--clay); background: #fff; }
+  .cat-name-input { background: transparent; border: 0.5px solid transparent; border-radius: 4px; padding: 2px 5px; font-size: 13px; font-family: 'Playfair Display', serif; font-weight: 700; color: #9e6b7a; min-width: 80px; width: auto; max-width: 220px; letter-spacing: 0.04em; transition: border-color 0.15s; }
+  .cat-name-input:hover { border-color: var(--border); background: #e6cfc2; }
+  .cat-name-input:focus { outline: none; border-color: var(--clay); background: #fff; }
+  .del-btn { background: transparent; border: none; cursor: pointer; font-size: 11px; line-height: 1; padding: 2px 5px; border-radius: 4px; color: #c0a0a0; opacity: 0; transition: opacity 0.15s, color 0.15s; margin-left: 2px; }
+  tr:hover .del-btn { opacity: 0.7; }
+  .del-btn:hover { opacity: 1 !important; color: #8c2e2e; background: #f8e0e0; }
+
+  .chart-toggle { display: flex; gap: 4px; }
+  .chart-toggle-btn { padding: 3px 10px; border: 0.5px solid var(--border); border-radius: 20px; background: transparent; cursor: pointer; font-size: 11px; font-family: 'Playfair Display', serif; color: var(--text-muted); transition: all 0.15s; }
+  .chart-toggle-btn.active { background: var(--burgundy); color: #fff; border-color: var(--burgundy); }
+  .chart-toggle-btn:hover:not(.active) { background: var(--sand-mid); }
+  .rec-negative { color: #8c2e2e !important; }
+
+  .share-btn { background: transparent; border: 0.5px solid var(--border); border-radius: 6px; padding: 5px 14px; font-size: 12px; font-family: 'Playfair Display', serif; color: var(--text-muted); cursor: pointer; transition: all 0.15s; white-space: nowrap; align-self: flex-end; }
+  .share-btn:hover { border-color: var(--clay); color: var(--clay); background: var(--sand-mid); }
+
+  .add-expense-btn { margin-top: 12px; background: transparent; border: 1.5px dashed var(--border); border-radius: 8px; width: 100%; padding: 10px; cursor: pointer; font-size: 13px; font-family: 'Playfair Display', serif; color: var(--text-muted); transition: all 0.15s; }
+  .add-expense-btn:hover { border-color: var(--clay); color: var(--clay); background: var(--sand-mid); }
+
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(61,31,46,0.4); z-index: 100; align-items: center; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--sand-light); border: 0.5px solid var(--border); border-radius: 14px; padding: 28px 28px 24px; width: 380px; max-width: 90vw; box-shadow: 0 8px 40px rgba(0,0,0,0.18); }
+  .modal h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--burgundy); margin-bottom: 18px; }
+  .modal-field { margin-bottom: 14px; }
+  .modal-field label { display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+  .modal-field input, .modal-field select { width: 100%; padding: 8px 10px; border: 0.5px solid var(--border); border-radius: 6px; font-size: 13px; font-family: 'Playfair Display', serif; background: #fff; color: var(--text-main); }
+  .modal-field input:focus, .modal-field select:focus { outline: none; border-color: var(--clay); }
+  .modal-toggle { display: flex; gap: 8px; }
+  .modal-toggle button { flex: 1; padding: 8px; border: 0.5px solid var(--border); border-radius: 6px; background: #fff; cursor: pointer; font-size: 13px; font-family: 'Playfair Display', serif; color: var(--text-muted); transition: all 0.15s; }
+  .modal-toggle button.active { background: var(--burgundy); color: #fff; border-color: var(--burgundy); }
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+  .modal-actions button { flex: 1; padding: 10px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; font-family: 'Playfair Display', serif; font-weight: 700; transition: background 0.15s; }
+  .btn-cancel { background: var(--sand-mid); color: var(--text-muted); }
+  .btn-cancel:hover { background: var(--border); }
+  .btn-submit { background: var(--burgundy); color: #fff; }
+  .btn-submit:hover { background: #4a2438; }
+
+  .share-modal-url { display: flex; gap: 8px; margin-top: 8px; }
+  .share-modal-url input { flex: 1; padding: 8px 10px; border: 0.5px solid var(--border); border-radius: 6px; font-size: 12px; font-family: monospace; background: #fff; color: var(--text-main); min-width: 0; }
+  .share-modal-note { margin-top: 10px; font-size: 12px; color: var(--text-muted); font-style: italic; line-height: 1.5; background: var(--sand-mid); border-radius: 6px; padding: 10px 12px; }
+  #copy-share-btn { background: var(--burgundy); color: #fff; border: none; border-radius: 6px; padding: 8px 14px; font-size: 13px; font-family: 'Playfair Display', serif; cursor: pointer; white-space: nowrap; transition: background 0.15s; }
+  #copy-share-btn:hover { background: #4a2438; }
+
+  tr.locked-row td { background: #f8efe9; }
+  tr.locked-row:hover td { background: #f3e6de; }
+
+  td.rec-adjusted { color: var(--text-main); font-weight: 400; }
+  td.rec-spend-col .editable { font-weight: 400; }
+
+  /* Column group separators: before Cost col (4th) and before Actual % col (7th) */
+  thead th:nth-child(4), tbody td:nth-child(4) { border-left: 2px solid var(--border); padding-left: 18px; padding-right: 18px; }
+  thead th:nth-child(5), tbody td:nth-child(5) { padding-left: 0; padding-right: 0; }
+  thead th:nth-child(6), tbody td:nth-child(6) { padding-left: 18px; padding-right: 18px; }
+  thead th:nth-child(7), tbody td:nth-child(7) { border-left: 2px solid var(--border); padding-left: 14px; padding-right: 14px; }
+  thead th:nth-child(8), tbody td:nth-child(8) { padding-left: 14px; padding-right: 14px; }
+
+  .total-row td { background: var(--sand); font-weight: 700; border-top: 1px solid var(--border) !important; font-size: 13px; color: var(--text-main); }
+  .cat-stats-row td { background: var(--sand-mid); color: var(--text-muted); font-size: 12px; padding: 5px 14px; border-top: 0.5px solid var(--border); font-style: italic; }
+  .cat-stats-row td.num { text-align: right; }
+
+  .panels-row { display: flex; gap: 14px; margin-bottom: 20px; align-items: flex-start; }
+  .chart-panel { background: var(--sand-light); border: 0.5px solid var(--border); border-radius: 12px; padding: 18px; flex-shrink: 0; width: 340px; height: 380px; display: flex; flex-direction: column; }
+  .chart-wrap { width: 120px; height: 120px; margin: 0 auto 12px; flex-shrink: 0; }
+  .chart-legend { display: flex; flex-direction: column; gap: 5px; flex: 1; overflow-y: auto; }
+  .legend-item { display: grid; grid-template-columns: 10px 1fr 34px 70px; align-items: center; gap: 5px; font-size: 13px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .legend-name { color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .legend-pct { font-weight: 600; color: var(--text-main); text-align: right; white-space: nowrap; }
+  .legend-amt { font-weight: 400; color: var(--text-muted); font-size: 11px; text-align: right; white-space: nowrap; }
+  .chart-title { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 600; color: var(--burgundy); margin-bottom: 12px; flex-shrink: 0; }
+  .unlocked-panel { background: var(--sand-light); border: 0.5px solid var(--border); border-radius: 12px; padding: 18px; flex: 1; height: 380px; overflow-y: auto; }
+  .unlocked-panel .chart-title { margin-bottom: 10px; }
+  .unlocked-item { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
+  .unlocked-item:last-child { border-bottom: none; }
+  .unlocked-name { color: var(--text-muted); flex: 1; padding-right: 8px; }
+  .unlocked-val { font-weight: 600; color: var(--text-main); white-space: nowrap; }
+
+  @media (max-width: 640px) {
+    .summary-grid { grid-template-columns: repeat(2, 1fr); }
+    .chart-panel { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="page-header">
+    <div>
+      <div class="page-title"><span class="heart">♥</span> Sam's wedding budget</div>
+      <div class="page-sub">Interactive tracker · adjust guests and budgets inline</div>
+    </div>
+    <div style="display:flex;align-items:flex-end;gap:10px;">
+      <div class="budget-edit">
+        <label for="total-budget-input">Total budget</label>
+        <input id="total-budget-input" type="text" value="$90,000" onblur="onTotalBudgetChange(this.value)" onfocus="this.select()" />
+      </div>
+      <button class="share-btn" id="share-btn" onclick="shareLink()">⤴ Share link</button>
+    </div>
+  </div>
+
+  <div class="summary-grid">
+    <div class="metric"><div class="metric-label">Total budget</div><div class="metric-value" id="m-budget">$45,000</div></div>
+    <div class="metric"><div class="metric-label">Allocated (pre-tip)</div><div class="metric-value" id="m-allocated">$45,000</div></div>
+    <div class="metric"><div class="metric-label">Total w/ tips & fees</div><div class="metric-value warn" id="m-total">$45,000</div></div>
+    <div class="metric"><div class="metric-label">Remaining</div><div class="metric-value good" id="m-remaining">$0</div></div>
+  </div>
+
+  <div class="guest-panel">
+    <span class="guest-icon">👥</span>
+    <label for="guest-slider">Number of guests (updates variable costs automatically)</label>
+    <input type="range" id="guest-slider" min="20" max="400" step="5" value="120" oninput="onGuestsChange(this.value)" />
+    <span class="guest-count-val" id="guest-label">120 guests</span>
+  </div>
+
+  <div class="panels-row">
+    <div class="chart-panel">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;flex-shrink:0;margin-bottom:12px;">
+        <div class="chart-title" style="margin-bottom:0;">Budget by category</div>
+        <div class="chart-toggle">
+          <button id="chart-toggle-rec" class="chart-toggle-btn active" onclick="setChartMode('recommended')">Rec.</button>
+          <button id="chart-toggle-act" class="chart-toggle-btn" onclick="setChartMode('actual')">Actual</button>
+        </div>
+      </div>
+      <div class="chart-wrap"><canvas id="donut-chart"></canvas></div>
+      <div class="chart-legend" id="chart-legend"></div>
+    </div>
+    <div class="unlocked-panel">
+      <div class="chart-title">Remaining expenses</div>
+      <div id="unlocked-list"></div>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:25%">Expense</th>
+          <th class="num" style="width:8%">Rec. %</th>
+          <th class="num" style="width:12%">Rec. spend</th>
+          <th class="num" style="width:11.5%">Cost</th>
+          <th style="width:3%"></th>
+          <th class="num" style="width:11.5%">Tip / fee %</th>
+          <th class="num" style="width:14.5%">Actual %</th>
+          <th class="num" style="width:14.5%"><strong>Total cost</strong></th>
+        </tr>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+
+  <button class="add-expense-btn" onclick="showAddModal()">＋ Add expense</button>
+
+  <!-- Share modal -->
+  <div class="modal-overlay" id="share-modal" onclick="if(event.target===this)hideShareModal()">
+    <div class="modal" style="width:460px;">
+      <h3>Share budget link</h3>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">This link includes all your current numbers. Anyone who opens it will see your exact budget.</p>
+      <div class="share-modal-url">
+        <input id="share-url-input" type="text" readonly />
+        <button id="copy-share-btn" onclick="copyShareUrl()">Copy</button>
+      </div>
+      <div class="share-modal-note" id="share-note" style="display:none">
+        ⚠ You're not on a hosted URL yet — this is just the data token. Deploy the HTML file to Netlify or GitHub Pages first, then open it from there and click Share link again to get a full shareable URL.
+      </div>
+      <div class="modal-actions" style="margin-top:16px;">
+        <button class="btn-cancel" onclick="hideShareModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add expense modal -->
+  <div class="modal-overlay" id="add-modal" onclick="if(event.target===this)hideAddModal()">
+    <div class="modal">
+      <h3>Add new expense</h3>
+      <div class="modal-field">
+        <label>Expense name</label>
+        <input type="text" id="m-name" placeholder="e.g. Photo booth" />
+      </div>
+      <div class="modal-field">
+        <label>Category</label>
+        <select id="m-category"></select>
+      </div>
+      <div class="modal-field">
+        <label>Type</label>
+        <div class="modal-toggle">
+          <button id="m-type-fixed" class="active" onclick="setAddType('fixed')">Fixed cost</button>
+          <button id="m-type-variable" onclick="setAddType('variable')">Per head (variable)</button>
+        </div>
+      </div>
+      <div class="modal-field" id="m-cost-field">
+        <label>Cost ($)</label>
+        <input type="text" id="m-cost" placeholder="e.g. 2000" />
+      </div>
+      <div class="modal-field" id="m-rate-field" style="display:none">
+        <label>Per-head rate ($)</label>
+        <input type="text" id="m-rate" placeholder="e.g. 25" />
+      </div>
+      <div class="modal-field">
+        <label>Tip / fee %</label>
+        <input type="text" id="m-tip-modal" placeholder="0" value="0" />
+      </div>
+      <div class="modal-field">
+        <label>Rec. spend ($) <span style="font-weight:400;text-transform:none;letter-spacing:0">&nbsp;—&nbsp;leave blank to auto-fill from cost</span></label>
+        <input type="text" id="m-rec" placeholder="auto" />
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="hideAddModal()">Cancel</button>
+        <button class="btn-submit" onclick="submitAddExpense()">Add expense</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<script>
+const categories = [
+  { name: "Venue & ceremony", color: "#5d2e46", items: [
+    { name: "Venue rental",          recSpend: 7000,  budgeted: 7000,   variable: false, tipPct: 0, locked: false },
+    { name: "Ceremony space",        recSpend: 1400,  budgeted: 1400,   variable: false, tipPct: 0, locked: false },
+  ]},
+  { name: "Welcome drinks", color: "#d4a5a5", items: [
+    { name: "Welcome drinks",        recSpend: 10000, budgeted: 10000,  variable: false, tipPct: 0, locked: false },
+  ]},
+  { name: "Catering & bar", color: "#b87d6d", items: [
+    { name: "Catering",              recSpend: 12770, variable: true,   perHeadRate: 85, tipPct: 20, locked: false },
+    { name: "Bar & beverages",       recSpend: 10430, variable: true,   perHeadRate: 35, tipPct: 20, locked: false },
+    { name: "Wedding cake",          recSpend: 900,   budgeted: 900,    variable: false, tipPct: 0, locked: false },
+    { name: "Late night food",       recSpend: 2000,  budgeted: 2000,   variable: false, tipPct: 0, locked: false },
+  ]},
+  { name: "Photography & video", color: "#7a4f60", items: [
+    { name: "Photographer",          recSpend: 11000, budgeted: 11000,  variable: false, tipPct: 15, locked: false },
+    { name: "Planner",               recSpend: 2000,  budgeted: 2000,   variable: false, tipPct: 0,  locked: false },
+  ]},
+  { name: "Florals & décor", color: "#c4967a", items: [
+    { name: "Floral arrangements",   recSpend: 6000,  budgeted: 6000,   variable: false, tipPct: 0, locked: false },
+    { name: "Centerpieces",          recSpend: 3500,  budgeted: 3500,   variable: false, tipPct: 0, locked: false },
+    { name: "Lighting",              recSpend: 2500,  budgeted: 2500,   variable: false, tipPct: 0, locked: false },
+    { name: "Linens",                recSpend: 1200,  budgeted: 1200,   variable: false, tipPct: 0, locked: false },
+  ]},
+  { name: "Attire & beauty", color: "#9e6b7a", items: [
+    { name: "Wedding dress",         recSpend: 4000,  budgeted: 4000,   variable: false, tipPct: 0, locked: false },
+    { name: "Hair & makeup",         recSpend: 2200,  budgeted: 2200,   variable: false, tipPct: 20, locked: false },
+  ]},
+  { name: "Music & entertainment", color: "#e8c4b0", items: [
+    { name: "Band or DJ",            recSpend: 6600,  budgeted: 8500,   variable: false, tipPct: 15, locked: false },
+    { name: "Live music component",  recSpend: 0,     budgeted: 0,      variable: false, tipPct: 0,  locked: false },
+  ]},
+  { name: "Stationery & extras", color: "#c4a882", items: [
+    { name: "Invitations & postage", recSpend: 700,   budgeted: 700,    variable: false, tipPct: 0, locked: false },
+    { name: "Favors",                recSpend: 800,   budgeted: 800,    variable: false, tipPct: 0, locked: false },
+    { name: "Buffer / misc.",        recSpend: 5000,  budgeted: 5000,   variable: false, tipPct: 0, locked: false },
+  ]},
+];
+
+let totalBudget = 90000;
+let guests = 120;
+
+const STORAGE_KEY = 'wedding-budget-data-v2';
+
+function itemKey(cat, item) { return cat.name + '::' + item.name; }
+
+function saveState() {
+  const itemOverrides = {};
+  const catNames = {};
+  categories.forEach((cat, idx) => {
+    catNames[idx] = cat.name;
+    cat.items.forEach(item => {
+      const o = { tipPct: item.tipPct, locked: item.locked, recSpend: item.recSpend };
+      if (item.variable) o.perHeadRate = item.perHeadRate;
+      else o.budgeted = item.budgeted;
+      itemOverrides[itemKey(cat, item)] = o;
+    });
+  });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ totalBudget, guests, itemOverrides, catNames }));
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    if (saved.totalBudget) totalBudget = saved.totalBudget;
+    if (saved.guests) { guests = saved.guests; document.getElementById('guest-slider').value = guests; document.getElementById('guest-label').textContent = guests + ' guests'; }
+    if (saved.catNames) {
+      Object.keys(saved.catNames).forEach(idx => {
+        if (categories[+idx]) categories[+idx].name = saved.catNames[idx];
+      });
+    }
+    if (saved.itemOverrides) {
+      categories.forEach(cat => cat.items.forEach(item => {
+        const key = itemKey(cat, item);
+        const override = saved.itemOverrides[key];
+        if (!override) return;
+        if (item.variable && override.perHeadRate != null) item.perHeadRate = override.perHeadRate;
+        if (!item.variable && override.budgeted != null) item.budgeted = override.budgeted;
+        if (override.tipPct  != null) item.tipPct  = override.tipPct;
+        if (override.locked  != null) item.locked  = override.locked;
+        if (override.recSpend != null) item.recSpend = override.recSpend;
+      }));
+    }
+    document.getElementById('total-budget-input').value = '$' + totalBudget.toLocaleString();
+  } catch(e) {}
+}
+
+function getBudgeted(item) {
+  if (item.variable) return Math.round(item.perHeadRate * guests);
+  return item.budgeted;
+}
+
+function getTotal(item) {
+  return Math.round(getBudgeted(item) * (1 + item.tipPct / 100));
+}
+
+function getEffectiveRec(item) {
+  // Locked items: rec spend is always the live total cost (incl. tip)
+  // Unlocked items: rec spend is whatever the user set (or what was frozen at unlock)
+  return item.locked ? getTotal(item) : item.recSpend;
+}
+
+// All reallocation flows through Buffer / misc. only.
+// Falls back to proportional spread if buffer is locked, missing, or IS the changed item.
+function findBuffer() {
+  return categories.flatMap(c => c.items).find(i => i.name === 'Buffer / misc.');
+}
+
+function redistribute(delta, excludeItem) {
+  if (delta === 0) return;
+  const bufItem = findBuffer();
+  if (bufItem && bufItem !== excludeItem && !bufItem.locked) {
+    bufItem.recSpend -= delta;   // positive delta → buffer shrinks; negative → buffer grows
+    return;
+  }
+  // Fallback: proportional spread across other unlocked items
+  const recipients = categories.flatMap(c => c.items)
+    .filter(i => !i.locked && i !== excludeItem);
+  if (recipients.length === 0) return;
+  const adjustment  = -delta;
+  const recipientSum = recipients.reduce((s, i) => s + i.recSpend, 0);
+  let applied = 0;
+  recipients.forEach((i, idx) => {
+    let share;
+    if (idx === recipients.length - 1) {
+      share = adjustment - applied;
+    } else if (recipientSum > 0) {
+      share = Math.round(adjustment * (i.recSpend / recipientSum));
+    } else {
+      share = Math.round(adjustment / recipients.length);
+    }
+    i.recSpend += share;
+    applied += share;
+  });
+}
+
+function toggleLock(ci, ii) {
+  const item = categories[ci].items[ii];
+  if (item.locked) {
+    // Unlock: recSpend stays frozen at the locked value — user can now edit it freely
+    item.locked = false;
+  } else {
+    // Lock: snap recSpend to current total cost (incl. tip) and redistribute delta
+    const oldRecSpend = item.recSpend;
+    item.locked = true;
+    item.recSpend = getTotal(item);
+    redistribute(item.recSpend - oldRecSpend, item);
+  }
+  saveState();
+  renderAll();
+}
+
+function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
+function parseDollar(str) { return parseInt(str.replace(/[^0-9]/g, ''), 10) || 0; }
+function parsePct(str) { return parseFloat(str.replace(/[^0-9.]/g, '')) || 0; }
+
+function renderAll() { renderMetrics(); renderTable(); renderChart(); renderUnlockedPanel(); }
+
+function renderUnlockedPanel() {
+  const list = document.getElementById('unlocked-list');
+  if (!list) return;
+  const unlocked = categories.flatMap(c => c.items).filter(i => !i.locked && i.name !== 'Buffer / misc.')
+    .sort((a, b) => b.recSpend - a.recSpend);
+  if (unlocked.length === 0) {
+    list.innerHTML = '<div style="color:var(--text-muted);font-size:12px;font-style:italic;padding:6px 0">All expenses are locked.</div>';
+    return;
+  }
+  list.innerHTML = unlocked.map(item => {
+    const isNeg = item.recSpend < 0;
+    return `<div class="unlocked-item">
+      <span class="unlocked-name">${item.name}</span>
+      <span class="unlocked-val${isNeg ? ' rec-negative' : ''}">${fmt(item.recSpend)}${isNeg ? ' ⚠' : ''}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderMetrics() {
+  const allItems = categories.flatMap(c => c.items);
+  const totalAllocated = allItems.reduce((s, i) => s + getBudgeted(i), 0);
+  const totalWithTips  = allItems.reduce((s, i) => s + getTotal(i), 0);
+  const remaining = totalBudget - totalWithTips;
+
+  document.getElementById('m-budget').textContent = fmt(totalBudget);
+  document.getElementById('m-allocated').textContent = fmt(totalAllocated);
+  document.getElementById('m-total').textContent = fmt(totalWithTips);
+
+  const remEl = document.getElementById('m-remaining');
+  remEl.textContent = fmt(remaining);
+  remEl.className = 'metric-value ' + (remaining < 0 ? 'over' : remaining < totalBudget * 0.1 ? 'warn' : 'good');
+}
+
+function renderTable() {
+  const allItems = categories.flatMap(c => c.items);
+  const tbody = document.getElementById('table-body');
+  let html = '';
+
+  categories.forEach((cat, ci) => {
+    const catRec    = cat.items.reduce((s, i) => s + getEffectiveRec(i), 0);
+    const catCost   = cat.items.reduce((s, i) => s + getBudgeted(i), 0);
+    const catTotal  = cat.items.reduce((s, i) => s + getTotal(i), 0);
+    const catActPct = totalBudget > 0 ? ((catTotal / totalBudget) * 100).toFixed(1) : '0.0';
+    const catRecPct = totalBudget > 0 ? (catRec   / totalBudget * 100).toFixed(1) : '0.0';
+
+    html += `<tr class="cat-row" onclick="toggleCat(${ci})">
+      <td><div style="display:flex;align-items:center;gap:5px;">▾
+        <input class="cat-name-input" type="text" value="${cat.name.replace(/"/g, '&quot;')}"
+          onchange="onCatNameEdit(${ci},this.value)"
+          onfocus="this.select()" onclick="event.stopPropagation()" />
+      </div></td>
+      <td class="num">${catRecPct}%</td>
+      <td class="num">${fmt(catRec)}</td>
+      <td class="num">${fmt(catCost)}</td>
+      <td class="lock-col"></td>
+      <td class="num">—</td>
+      <td class="num">${catActPct}%</td>
+      <td class="num"><strong>${fmt(catTotal)}</strong></td>
+    </tr>`;
+
+    cat.items.forEach((item, ii) => {
+      const budgeted  = getBudgeted(item);
+      const total     = getTotal(item);
+      const effRec    = getEffectiveRec(item);
+      const recPct    = totalBudget > 0 ? (effRec / totalBudget * 100).toFixed(1) : '0.0';
+      const actualPct = totalBudget > 0 ? (total  / totalBudget * 100).toFixed(1) : '0.0';
+      const hasTip    = item.tipPct > 0;
+
+      const badge = item.variable
+        ? `<span class="badge-variable">per head</span>`
+        : `<span class="badge-fixed">fixed</span>`;
+
+      // Rec. Spend: editable when unlocked, static display when locked
+      const recField = item.locked
+        ? `<span class="locked-rec-val">${fmt(effRec)}</span>`
+        : `<input class="editable" type="text" value="${fmt(item.recSpend)}"
+            onchange="onRecSpendEdit(${ci},${ii},this.value)"
+            onblur="fmtRecSpendCell(this,${ci},${ii})"
+            onfocus="this.select()" />`;
+
+      // Cost: always editable
+      const costField = item.variable
+        ? `<input class="editable" type="text" value="$${item.perHeadRate}/head"
+            onchange="onRateEdit(${ci},${ii},this.value)"
+            onblur="fmtRateCell(this,${ci},${ii})"
+            onfocus="this.select()"
+            title="Per-head rate — total updates automatically with guest count" />`
+        : `<input class="editable" type="text" value="${fmt(budgeted)}"
+            onchange="onBudgetEdit(${ci},${ii},this.value)"
+            onblur="fmtBudgetCell(this,${ci},${ii})"
+            onfocus="this.select()" />`;
+
+      const lockBtn = `<button class="lock-btn ${item.locked ? 'locked' : ''}" onclick="toggleLock(${ci},${ii})"
+          title="${item.locked ? 'Unlock — rec. spend stays frozen at locked value' : 'Lock — rec. spend will match total cost (incl. tip)'}">${item.locked ? '🔒' : '🔓'}</button>`;
+
+      html += `<tr data-cat="${ci}" data-item="${ii}" class="${item.locked ? 'locked-row' : ''}">
+        <td><div class="expense-name">
+          <input class="name-input" type="text" value="${item.name.replace(/"/g, '&quot;')}"
+            onchange="onNameEdit(${ci},${ii},this.value)" onfocus="this.select()" />
+          ${badge}
+          <button class="del-btn" onclick="deleteItem(${ci},${ii})" title="Remove this expense">✕</button>
+        </div></td>
+        <td class="num${item.locked ? ' rec-adjusted' : (effRec < 0 ? ' rec-negative' : '')}">${recPct}%</td>
+        <td class="num rec-spend-col${item.locked ? ' rec-adjusted' : (effRec < 0 ? ' rec-negative' : '')}">${recField}</td>
+        <td class="num"><div class="cost-cell">${costField}</div></td>
+        <td class="lock-col">${lockBtn}</td>
+        <td class="num">
+          <input class="tip-input" type="text" value="${item.tipPct}%"
+            onchange="onTipEdit(${ci},${ii},this.value)"
+            onblur="fmtTipCell(this,${ci},${ii})"
+            onfocus="this.select()" />
+        </td>
+        <td class="num">${actualPct}%</td>
+        <td class="num total-cell ${hasTip ? 'has-tip' : ''}">${fmt(total)}</td>
+      </tr>`;
+    });
+  });
+
+  // Grand total row
+  const totalRec    = allItems.reduce((s, i) => s + getEffectiveRec(i), 0);
+  const totalPre    = allItems.reduce((s, i) => s + getBudgeted(i), 0);
+  const totalPost   = allItems.reduce((s, i) => s + getTotal(i), 0);
+  const totalActPct = totalBudget > 0 ? ((totalPost / totalBudget) * 100).toFixed(1) : '0.0';
+  const totalRecPct = totalBudget > 0 ? (totalRec  / totalBudget * 100).toFixed(1) : '0.0';
+
+  html += `<tr class="total-row">
+    <td>Grand total</td>
+    <td class="num">${totalRecPct}%</td>
+    <td class="num">${fmt(totalRec)}</td>
+    <td class="num">${fmt(totalPre)}</td>
+    <td class="lock-col"></td>
+    <td class="num">—</td>
+    <td class="num">${totalActPct}%</td>
+    <td class="num"><strong>${fmt(totalPost)}</strong></td>
+  </tr>`;
+
+  tbody.innerHTML = html;
+}
+
+let donutChart = null;
+let chartMode  = 'recommended';
+
+function setChartMode(mode) {
+  chartMode = mode;
+  document.getElementById('chart-toggle-rec').classList.toggle('active', mode === 'recommended');
+  document.getElementById('chart-toggle-act').classList.toggle('active', mode === 'actual');
+  renderChart();
+}
+
+function renderChart() {
+  const labels = categories.map(c => c.name);
+  const data = chartMode === 'recommended'
+    ? categories.map(c => c.items.reduce((s, i) => s + Math.max(0, getEffectiveRec(i)), 0))
+    : categories.map(c => c.items.reduce((s, i) => s + getTotal(i), 0));
+  const colors = categories.map(c => c.color);
+
+  const legendEl = document.getElementById('chart-legend');
+  const total = data.reduce((a, b) => a + b, 0);
+  legendEl.innerHTML = categories.map((cat, i) => {
+    const pct = total > 0 ? ((data[i] / total) * 100).toFixed(0) : 0;
+    const amt = chartMode === 'recommended'
+      ? cat.items.reduce((s, j) => s + getEffectiveRec(j), 0)
+      : cat.items.reduce((s, j) => s + getTotal(j), 0);
+    return `<div class="legend-item">
+      <div class="legend-dot" style="background:${cat.color}"></div>
+      <span class="legend-name">${cat.name}</span>
+      <span class="legend-pct">${pct}%</span>
+      <span class="legend-amt">${fmt(amt)}</span>
+    </div>`;
+  }).join('');
+
+  if (donutChart) { donutChart.data.datasets[0].data = data; donutChart.update(); return; }
+
+  const ctx = document.getElementById('donut-chart').getContext('2d');
+  donutChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data, backgroundColor: colors, borderWidth: 2, borderColor: '#fff', hoverOffset: 6 }] },
+    options: {
+      cutout: '68%',
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${fmt(ctx.parsed)} (${((ctx.parsed / ctx.dataset.data.reduce((a,b)=>a+b,0))*100).toFixed(0)}%)` } }
+      }
+    }
+  });
+}
+
+function onGuestsChange(val) {
+  // Capture old totals for locked variable items before updating guest count
+  const allItems = categories.flatMap(c => c.items);
+  const lockedVar = allItems.filter(i => i.locked && i.variable);
+  const oldTotals = lockedVar.map(i => getTotal(i));
+
+  guests = parseInt(val);
+  document.getElementById('guest-label').textContent = guests + ' guests';
+
+  // Sync locked variable items' recSpend to new total cost, redistribute delta
+  let totalDelta = 0;
+  lockedVar.forEach((item, idx) => {
+    const newTotal = getTotal(item);
+    totalDelta += newTotal - oldTotals[idx];
+    item.recSpend = newTotal;
+  });
+  if (totalDelta !== 0) redistribute(totalDelta, null);
+
+  saveState();
+  renderAll();
+}
+
+function onTotalBudgetChange(val) {
+  const newBudget = parseDollar(val);
+  const el = document.getElementById('total-budget-input');
+  if (newBudget <= 0) { el.value = fmt(totalBudget); return; }
+
+  const allItems       = categories.flatMap(c => c.items);
+  const lockedTotal    = allItems.filter(i => i.locked).reduce((s, i) => s + getTotal(i), 0);
+  const unlockedSum    = allItems.filter(i => !i.locked).reduce((s, i) => s + i.recSpend, 0);
+  const newTarget      = newBudget - lockedTotal;
+  const delta          = newTarget - unlockedSum; // amount buffer needs to absorb
+
+  const bufItem = findBuffer();
+  if (bufItem && !bufItem.locked) {
+    bufItem.recSpend += delta;
+  } else {
+    // Fallback: proportional scale of unlocked items
+    const unlockedItems = allItems.filter(i => !i.locked);
+    if (unlockedSum > 0 && newTarget > 0) {
+      let applied = 0;
+      unlockedItems.forEach((i, idx) => {
+        if (idx === unlockedItems.length - 1) {
+          i.recSpend = newTarget - applied;
+        } else {
+          const v = Math.round(i.recSpend * (newTarget / unlockedSum));
+          i.recSpend = v;
+          applied += v;
+        }
+      });
+    }
+  }
+
+  totalBudget = newBudget;
+  el.value = fmt(totalBudget);
+  saveState();
+  renderAll();
+}
+
+function formatBudgetInput(el) { el.value = fmt(parseDollar(el.value)); }
+
+function onRecSpendEdit(ci, ii, val) {
+  const item = categories[ci].items[ii];
+  if (item.locked) return;
+  const oldVal = item.recSpend;
+  item.recSpend = parseDollar(val);
+  redistribute(item.recSpend - oldVal, item);
+  saveState();
+  renderAll();
+}
+
+function fmtRecSpendCell(el, ci, ii) {
+  el.value = fmt(categories[ci].items[ii].recSpend);
+}
+
+function onBudgetEdit(ci, ii, val) {
+  const item = categories[ci].items[ii];
+  const oldTotal = item.locked ? getTotal(item) : null;
+  item.budgeted = parseDollar(val);
+  if (item.locked) {
+    const newTotal = getTotal(item);
+    const delta = newTotal - oldTotal;
+    item.recSpend = newTotal;
+    redistribute(delta, item);
+  }
+  saveState();
+  renderAll();
+}
+
+function fmtBudgetCell(el, ci, ii) { el.value = fmt(categories[ci].items[ii].budgeted); }
+
+function onRateEdit(ci, ii, val) {
+  const item = categories[ci].items[ii];
+  const oldTotal = item.locked ? getTotal(item) : null;
+  const rate = parseDollar(val);
+  if (rate > 0) item.perHeadRate = rate;
+  if (item.locked) {
+    const newTotal = getTotal(item);
+    item.recSpend = newTotal;
+    redistribute(newTotal - oldTotal, item);
+  }
+  saveState();
+  renderAll();
+}
+
+function fmtRateCell(el, ci, ii) { el.value = '$' + categories[ci].items[ii].perHeadRate + '/head'; }
+
+function onTipEdit(ci, ii, val) {
+  const item = categories[ci].items[ii];
+  const oldTotal = item.locked ? getTotal(item) : null;
+  item.tipPct = parsePct(val);
+  if (item.locked) {
+    const newTotal = getTotal(item);
+    item.recSpend = newTotal;
+    redistribute(newTotal - oldTotal, item);
+  }
+  saveState();
+  renderAll();
+}
+
+function fmtTipCell(el, ci, ii) { el.value = categories[ci].items[ii].tipPct + '%'; }
+
+function toggleCat(ci) {
+  document.querySelectorAll(`tr[data-cat="${ci}"]`).forEach(r => {
+    r.style.display = r.style.display === 'none' ? '' : 'none';
+  });
+}
+
+// ── Category name editing ─────────────────────────────────────────────────────
+function onCatNameEdit(ci, val) {
+  const trimmed = val.trim();
+  if (trimmed) categories[ci].name = trimmed;
+  saveState(); // don't re-render to avoid disrupting focus
+}
+
+// ── Expense name editing ──────────────────────────────────────────────────────
+function onNameEdit(ci, ii, val) {
+  const trimmed = val.trim();
+  if (trimmed) categories[ci].items[ii].name = trimmed;
+  saveState(); // don't re-render so focus isn't lost
+}
+
+// ── Delete expense ────────────────────────────────────────────────────────────
+function deleteItem(ci, ii) {
+  const item = categories[ci].items[ii];
+  if (!confirm(`Remove "${item.name}" from the budget?`)) return;
+  // Capture the effective rec spend before removal so we can free it
+  const freed = item.locked ? getTotal(item) : item.recSpend;
+  categories[ci].items.splice(ii, 1);
+  // Redistribute freed rec spend to remaining unlocked items
+  if (freed > 0) redistribute(-freed, null);
+  saveState();
+  renderAll();
+}
+
+// ── Add expense modal ─────────────────────────────────────────────────────────
+let addType = 'fixed';
+
+function showAddModal() {
+  const sel = document.getElementById('m-category');
+  sel.innerHTML = categories.map((c, i) => `<option value="${i}">${c.name}</option>`).join('');
+  document.getElementById('m-name').value = '';
+  document.getElementById('m-cost').value = '';
+  document.getElementById('m-rate').value = '';
+  document.getElementById('m-tip-modal').value = '0';
+  document.getElementById('m-rec').value = '';
+  setAddType('fixed');
+  document.getElementById('add-modal').classList.add('open');
+  setTimeout(() => document.getElementById('m-name').focus(), 60);
+}
+
+function hideAddModal() {
+  document.getElementById('add-modal').classList.remove('open');
+}
+
+function setAddType(type) {
+  addType = type;
+  document.getElementById('m-type-fixed').classList.toggle('active', type === 'fixed');
+  document.getElementById('m-type-variable').classList.toggle('active', type === 'variable');
+  document.getElementById('m-cost-field').style.display  = type === 'fixed'    ? '' : 'none';
+  document.getElementById('m-rate-field').style.display  = type === 'variable' ? '' : 'none';
+}
+
+function submitAddExpense() {
+  const name = document.getElementById('m-name').value.trim();
+  if (!name) { document.getElementById('m-name').focus(); return; }
+
+  const ci     = parseInt(document.getElementById('m-category').value);
+  const tipPct = parsePct(document.getElementById('m-tip-modal').value);
+  const recRaw = parseDollar(document.getElementById('m-rec').value);
+
+  let newItem;
+  if (addType === 'variable') {
+    const rate = parseDollar(document.getElementById('m-rate').value) || 0;
+    const autoRec = Math.round(rate * guests * (1 + tipPct / 100));
+    newItem = { name, variable: true, perHeadRate: rate, tipPct, locked: false,
+                recSpend: recRaw > 0 ? recRaw : autoRec };
+  } else {
+    const cost = parseDollar(document.getElementById('m-cost').value) || 0;
+    const autoRec = Math.round(cost * (1 + tipPct / 100));
+    newItem = { name, variable: false, budgeted: cost, tipPct, locked: false,
+                recSpend: recRaw > 0 ? recRaw : autoRec };
+  }
+
+  // Take newItem's recSpend proportionally from unlocked items before adding
+  redistribute(newItem.recSpend, null);
+  categories[ci].items.push(newItem);
+
+  hideAddModal();
+  saveState();
+  renderAll();
+}
+
+// ── Share link (encode full state into URL hash) ──────────────────────────────
+function shareLink() {
+  const state = {
+    v: 1,
+    totalBudget,
+    guests,
+    cats: categories.map(cat => ({
+      n: cat.name,
+      c: cat.color,
+      items: cat.items.map(item => {
+        const o = { n: item.name, rs: item.recSpend, tip: item.tipPct, lk: item.locked ? 1 : 0, v: item.variable ? 1 : 0 };
+        if (item.variable) o.phr = item.perHeadRate;
+        else o.b = item.budgeted;
+        return o;
+      })
+    }))
+  };
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+  const base = window.location.href.split('#')[0];
+  // If we're on a real http/https URL use full URL; otherwise just show the hash token
+  const isHosted = base.startsWith('http://') || base.startsWith('https://');
+  const url = isHosted ? base + '#' + encoded : '#' + encoded;
+  const label = isHosted ? url : encoded;
+
+  // Show share modal
+  const overlay = document.getElementById('share-modal');
+  const inp = document.getElementById('share-url-input');
+  const note = document.getElementById('share-note');
+  inp.value = label;
+  note.style.display = isHosted ? 'none' : '';
+  overlay.classList.add('open');
+  setTimeout(() => { inp.select(); navigator.clipboard.writeText(label).catch(() => {}); }, 80);
+}
+
+function hideShareModal() {
+  document.getElementById('share-modal').classList.remove('open');
+}
+
+function copyShareUrl() {
+  const inp = document.getElementById('share-url-input');
+  inp.select();
+  navigator.clipboard.writeText(inp.value).then(() => {
+    const btn = document.getElementById('copy-share-btn');
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    btn.style.background = '#6b8f71';
+    setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 2000);
+  }).catch(() => {
+    document.execCommand('copy');
+  });
+}
+
+// ── Load shared state from URL hash ──────────────────────────────────────────
+function loadFromHash() {
+  const hash = window.location.hash.slice(1);
+  if (!hash) return false;
+  try {
+    const state = JSON.parse(decodeURIComponent(escape(atob(hash))));
+    if (!state.cats) return false;
+    if (state.totalBudget) totalBudget = state.totalBudget;
+    if (state.guests) guests = state.guests;
+    categories.length = 0;
+    state.cats.forEach(c => {
+      categories.push({
+        name: c.n, color: c.c,
+        items: c.items.map(it => ({
+          name: it.n, recSpend: it.rs, tipPct: it.tip,
+          locked: !!it.lk, variable: !!it.v,
+          ...(it.v ? { perHeadRate: it.phr } : { budgeted: it.b })
+        }))
+      });
+    });
+    return true;
+  } catch(e) { return false; }
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+const loadedFromHash = loadFromHash();
+if (loadedFromHash) {
+  // Apply shared state: update UI, persist to sister's localStorage, clean URL
+  document.getElementById('guest-slider').value = guests;
+  document.getElementById('guest-label').textContent = guests + ' guests';
+  document.getElementById('total-budget-input').value = '$' + totalBudget.toLocaleString();
+  saveState();
+  history.replaceState(null, '', window.location.pathname + window.location.search);
+} else {
+  loadState();
+}
+renderAll();
+</script>
+</body>
+</html>
