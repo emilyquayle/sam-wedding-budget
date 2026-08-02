@@ -85,6 +85,7 @@
   .lock-btn:hover { opacity: 1 !important; background: var(--sand-mid); }
   .lock-btn.locked { opacity: 1; }
   .locked-rec-val { display: inline-block; padding: 2px 4px; color: var(--text-main); font-weight: 400; }
+  .maxwell-linked-val { display: inline-block; padding: 3px 6px; color: var(--text-main); font-size: 13px; font-weight: 400; }
 
   .name-input { background: transparent; border: 0.5px solid transparent; border-radius: 4px; padding: 2px 5px; font-size: 13px; font-family: 'Playfair Display', serif; color: var(--text-main); min-width: 80px; width: auto; max-width: 160px; transition: border-color 0.15s; }
   .name-input:hover { border-color: var(--border); background: var(--sand-mid); }
@@ -138,29 +139,46 @@
   td.rec-adjusted { color: var(--text-main); font-weight: 400; }
   td.rec-spend-col .editable { font-weight: 400; }
 
-  /* Column group separators: before Cost col (4th) and before Actual % col (7th) */
-  thead th:nth-child(4), tbody td:nth-child(4) { border-left: 2px solid var(--border); padding-left: 18px; padding-right: 18px; }
-  thead th:nth-child(5), tbody td:nth-child(5) { padding-left: 0; padding-right: 0; }
-  thead th:nth-child(6), tbody td:nth-child(6) { padding-left: 18px; padding-right: 18px; }
-  thead th:nth-child(7), tbody td:nth-child(7) { border-left: 2px solid var(--border); padding-left: 14px; padding-right: 14px; }
-  thead th:nth-child(8), tbody td:nth-child(8) { padding-left: 14px; padding-right: 14px; }
+  /* Column group separators — scoped to main budget table only */
+  .table-wrap thead th:nth-child(4), .table-wrap tbody td:nth-child(4) { border-left: 2px solid var(--border); padding-left: 18px; padding-right: 18px; }
+  .table-wrap thead th:nth-child(5), .table-wrap tbody td:nth-child(5) { padding-left: 0; padding-right: 0; }
+  .table-wrap thead th:nth-child(6), .table-wrap tbody td:nth-child(6) { padding-left: 18px; padding-right: 18px; }
+  .table-wrap thead th:nth-child(7), .table-wrap tbody td:nth-child(7) { border-left: 2px solid var(--border); padding-left: 14px; padding-right: 14px; }
+  .table-wrap thead th:nth-child(8), .table-wrap tbody td:nth-child(8) { padding-left: 14px; padding-right: 14px; }
 
   .total-row td { background: var(--sand); font-weight: 700; border-top: 1px solid var(--border) !important; font-size: 13px; color: var(--text-main); }
   .cat-stats-row td { background: var(--sand-mid); color: var(--text-muted); font-size: 12px; padding: 5px 14px; border-top: 0.5px solid var(--border); font-style: italic; }
   .cat-stats-row td.num { text-align: right; }
 
   .panels-row { display: flex; gap: 14px; margin-bottom: 20px; align-items: flex-start; }
-  .chart-panel { background: var(--sand-light); border: 0.5px solid var(--border); border-radius: 12px; padding: 18px; flex-shrink: 0; width: 340px; height: 380px; display: flex; flex-direction: column; }
-  .chart-wrap { width: 120px; height: 120px; margin: 0 auto 12px; flex-shrink: 0; }
-  .chart-legend { display: flex; flex-direction: column; gap: 5px; flex: 1; overflow-y: auto; }
-  .legend-item { display: grid; grid-template-columns: 10px 1fr 34px 70px; align-items: center; gap: 5px; font-size: 13px; }
+  .chart-panel { background: var(--sand-light); border: 0.5px solid var(--border); border-radius: 12px; padding: 18px; flex-shrink: 0; width: 260px; height: 380px; display: flex; flex-direction: column; }
+  .chart-wrap { width: 100px; height: 100px; margin: 0 auto 10px; flex-shrink: 0; }
+  .chart-legend { display: flex; flex-direction: column; gap: 4px; flex: 1; overflow-y: auto; }
+  .legend-item { display: grid; grid-template-columns: 10px 1fr 30px 58px; align-items: center; gap: 4px; font-size: 12px; }
   .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
   .legend-name { color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .legend-pct { font-weight: 600; color: var(--text-main); text-align: right; white-space: nowrap; }
-  .legend-amt { font-weight: 400; color: var(--text-muted); font-size: 11px; text-align: right; white-space: nowrap; }
+  .legend-amt { font-weight: 400; color: var(--text-muted); font-size: 10px; text-align: right; white-space: nowrap; }
   .chart-title { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 600; color: var(--burgundy); margin-bottom: 12px; flex-shrink: 0; }
-  .unlocked-panel { background: var(--sand-light); border: 0.5px solid var(--border); border-radius: 12px; padding: 18px; flex: 1; height: 380px; overflow-y: auto; }
+  .unlocked-panel { background: var(--sand-light); border: 0.5px solid var(--border); border-radius: 12px; padding: 18px; width: 249px; flex-shrink: 0; height: 380px; overflow-y: auto; }
   .unlocked-panel .chart-title { margin-bottom: 10px; }
+
+  .maxwell-panel { background: var(--sand-light); border: 0.5px solid var(--border); border-radius: 12px; padding: 18px; flex: 1; height: 380px; overflow-y: auto; }
+  .maxwell-panel .chart-title { margin-bottom: 10px; }
+  .maxwell-table { width: 100%; border-collapse: collapse; font-family: 'Playfair Display', serif; table-layout: fixed; }
+  .maxwell-table thead th { font-size: 12px; font-weight: 600; color: var(--burgundy); padding: 5px 7px; text-align: center; border-bottom: 1px solid var(--border); background: var(--sand); }
+  .maxwell-table thead th:first-child { text-align: left; }
+  .maxwell-table tbody td { font-size: 12px; padding: 5px 7px; color: var(--text-main); text-align: center; border-bottom: 0.5px solid #e8d5c4; vertical-align: middle; overflow: hidden; }
+  .maxwell-table tbody td:first-child { text-align: left; color: var(--text-muted); }
+  .maxwell-table tbody tr:last-child td { border-bottom: none; }
+  .maxwell-total-col { border-left: 2px solid var(--border) !important; }
+  .maxwell-total td { font-weight: 700 !important; border-top: 1px solid var(--border) !important; border-bottom: 0.5px solid var(--border) !important; background: var(--sand); color: var(--text-main) !important; }
+  .maxwell-sub td { color: var(--text-muted) !important; font-style: italic; }
+  .maxwell-highlight td { font-weight: 700 !important; color: var(--burgundy) !important; background: var(--sand-mid); border-top: 1px solid var(--border) !important; }
+  .maxwell-input { background: transparent; border: 0.5px solid transparent; border-radius: 3px; padding: 1px 3px; font-size: 12px; font-family: 'Playfair Display', serif; color: var(--text-main); width: 100%; text-align: center; transition: border-color 0.15s; }
+  .maxwell-input:hover { border-color: var(--border); background: var(--sand-mid); }
+  .maxwell-input:focus { outline: none; border-color: var(--clay); background: #fff; }
+  .mx-negative { color: #8c2e2e !important; }
   .unlocked-item { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
   .unlocked-item:last-child { border-bottom: none; }
   .unlocked-name { color: var(--text-muted); flex: 1; padding-right: 8px; }
@@ -208,7 +226,7 @@
       <div style="display:flex;align-items:baseline;justify-content:space-between;flex-shrink:0;margin-bottom:12px;">
         <div class="chart-title" style="margin-bottom:0;">Budget by category</div>
         <div class="chart-toggle">
-          <button id="chart-toggle-rec" class="chart-toggle-btn active" onclick="setChartMode('recommended')">Rec.</button>
+          <button id="chart-toggle-rec" class="chart-toggle-btn active" onclick="setChartMode('recommended')">Budget</button>
           <button id="chart-toggle-act" class="chart-toggle-btn" onclick="setChartMode('actual')">Actual</button>
         </div>
       </div>
@@ -219,6 +237,21 @@
       <div class="chart-title">Remaining expenses</div>
       <div id="unlocked-list"></div>
     </div>
+    <div class="maxwell-panel">
+      <div class="chart-title">Maxwell's Trading estimate</div>
+      <table class="maxwell-table">
+        <thead>
+          <tr>
+            <th style="width:32%;text-align:left;">Item</th>
+            <th style="width:19%;text-align:center;">Cost</th>
+            <th style="width:13%;text-align:center;">#</th>
+            <th style="width:19%;text-align:center;">Tip/Tax</th>
+            <th style="width:17%;text-align:center;" class="maxwell-total-col">Total</th>
+          </tr>
+        </thead>
+        <tbody id="maxwell-tbody"></tbody>
+      </table>
+    </div>
   </div>
 
   <div class="table-wrap">
@@ -226,13 +259,13 @@
       <thead>
         <tr>
           <th style="width:25%">Expense</th>
-          <th class="num" style="width:8%">Rec. %</th>
-          <th class="num" style="width:12%">Rec. spend</th>
+          <th class="num" style="width:8%">Budget %</th>
+          <th class="num" style="width:12%">Budget spend</th>
           <th class="num" style="width:11.5%">Cost</th>
           <th style="width:3%"></th>
           <th class="num" style="width:11.5%">Tip / fee %</th>
           <th class="num" style="width:14.5%">Actual %</th>
-          <th class="num" style="width:14.5%"><strong>Total cost</strong></th>
+          <th class="num" style="width:14.5%"><strong>Actual spend</strong></th>
         </tr>
       </thead>
       <tbody id="table-body"></tbody>
@@ -307,47 +340,47 @@
 <script>
 const categories = [
   { name: "Venue & ceremony", color: "#5d2e46", items: [
-    { name: "Venue rental",          recSpend: 7000,  budgeted: 7000,   variable: false, tipPct: 0, locked: false },
-    { name: "Ceremony space",        recSpend: 1400,  budgeted: 1400,   variable: false, tipPct: 0, locked: false },
+    { name: "Venue rental",          recSpend: 6950,  budgeted: 5000,  variable: false, tipPct: 39, locked: true },
+    { name: "Ceremony space",        recSpend: 1390,  budgeted: 1000,  variable: false, tipPct: 39, locked: true },
   ]},
-  { name: "Welcome drinks", color: "#d4a5a5", items: [
-    { name: "Welcome drinks",        recSpend: 10000, budgeted: 10000,  variable: false, tipPct: 0, locked: false },
+  { name: "Friday festivities", color: "#d4a5a5", items: [
+    { name: "Welcome drinks",        recSpend: 9099,  budgeted: 0,     variable: false, tipPct: 0,  locked: false, maxwellLinked: true },
   ]},
-  { name: "Catering & bar", color: "#b87d6d", items: [
-    { name: "Catering",              recSpend: 12770, variable: true,   perHeadRate: 85, tipPct: 20, locked: false },
-    { name: "Bar & beverages",       recSpend: 10430, variable: true,   perHeadRate: 35, tipPct: 20, locked: false },
-    { name: "Wedding cake",          recSpend: 900,   budgeted: 900,    variable: false, tipPct: 0, locked: false },
-    { name: "Late night food",       recSpend: 2000,  budgeted: 2000,   variable: false, tipPct: 0, locked: false },
+  { name: "Food & drink", color: "#b87d6d", items: [
+    { name: "Catering",              recSpend: 22963, variable: true,  perHeadRate: 118, tipPct: 39, locked: true },
+    { name: "Bar & beverages",       recSpend: 17319, variable: true,  perHeadRate: 89,  tipPct: 39, locked: true },
+    { name: "Wedding cake",          recSpend: 600,   budgeted: 0,     variable: false, tipPct: 0,  locked: false },
+    { name: "Late night food",       recSpend: 2000,  budgeted: 0,     variable: false, tipPct: 0,  locked: false },
   ]},
-  { name: "Photography & video", color: "#7a4f60", items: [
-    { name: "Photographer",          recSpend: 11000, budgeted: 11000,  variable: false, tipPct: 15, locked: false },
-    { name: "Planner",               recSpend: 2000,  budgeted: 2000,   variable: false, tipPct: 0,  locked: false },
+  { name: "People", color: "#7a4f60", items: [
+    { name: "Photographer",          recSpend: 7130,  budgeted: 6200,  variable: false, tipPct: 15, locked: true },
+    { name: "Planner",               recSpend: 3000,  budgeted: 0,     variable: false, tipPct: 0,  locked: false },
   ]},
   { name: "Florals & décor", color: "#c4967a", items: [
-    { name: "Floral arrangements",   recSpend: 6000,  budgeted: 6000,   variable: false, tipPct: 0, locked: false },
-    { name: "Centerpieces",          recSpend: 3500,  budgeted: 3500,   variable: false, tipPct: 0, locked: false },
-    { name: "Lighting",              recSpend: 2500,  budgeted: 2500,   variable: false, tipPct: 0, locked: false },
-    { name: "Linens",                recSpend: 1200,  budgeted: 1200,   variable: false, tipPct: 0, locked: false },
+    { name: "Floral arrangements",   recSpend: 5000,  budgeted: 0,     variable: false, tipPct: 0,  locked: false },
+    { name: "Centerpieces",          recSpend: 3000,  budgeted: 0,     variable: false, tipPct: 0,  locked: false },
+    { name: "Lighting",              recSpend: 3000,  budgeted: 0,     variable: false, tipPct: 0,  locked: false },
+    { name: "Linens",                recSpend: 1000,  budgeted: 0,     variable: false, tipPct: 0,  locked: false },
   ]},
   { name: "Attire & beauty", color: "#9e6b7a", items: [
-    { name: "Wedding dress",         recSpend: 4000,  budgeted: 4000,   variable: false, tipPct: 0, locked: false },
-    { name: "Hair & makeup",         recSpend: 2200,  budgeted: 2200,   variable: false, tipPct: 20, locked: false },
+    { name: "Wedding dress",         recSpend: 5000,  budgeted: 0,     variable: false, tipPct: 0,  locked: false },
+    { name: "Hair & makeup",         recSpend: 2400,  budgeted: 0,     variable: false, tipPct: 20, locked: false },
   ]},
-  { name: "Music & entertainment", color: "#e8c4b0", items: [
-    { name: "Band or DJ",            recSpend: 6600,  budgeted: 8500,   variable: false, tipPct: 15, locked: false },
-    { name: "Live music component",  recSpend: 0,     budgeted: 0,      variable: false, tipPct: 0,  locked: false },
+  { name: "Music", color: "#e8c4b0", items: [
+    { name: "DJ",                    recSpend: 5000,  budgeted: 0,     variable: false, tipPct: 15, locked: false },
+    { name: "Live music component",  recSpend: 2000,  budgeted: 0,     variable: false, tipPct: 0,  locked: false },
   ]},
-  { name: "Stationery & extras", color: "#c4a882", items: [
-    { name: "Invitations & postage", recSpend: 700,   budgeted: 700,    variable: false, tipPct: 0, locked: false },
-    { name: "Favors",                recSpend: 800,   budgeted: 800,    variable: false, tipPct: 0, locked: false },
-    { name: "Buffer / misc.",        recSpend: 5000,  budgeted: 5000,   variable: false, tipPct: 0, locked: false },
+  { name: "Other", color: "#c4a882", items: [
+    { name: "Invitations & postage", recSpend: 750,   budgeted: 0,     variable: false, tipPct: 0,  locked: false },
+    { name: "Favors",                recSpend: 500,   budgeted: 0,     variable: false, tipPct: 0,  locked: false },
+    { name: "Buffer / misc.",        recSpend: 1899,  budgeted: 0,     variable: false, tipPct: 0,  locked: false },
   ]},
 ];
 
-let totalBudget = 90000;
-let guests = 120;
+let totalBudget = 100000;
+let guests = 140;
 
-const STORAGE_KEY = 'wedding-budget-data-v2';
+const STORAGE_KEY = 'wedding-budget-data-v4';
 
 function itemKey(cat, item) { return cat.name + '::' + item.name; }
 
@@ -443,11 +476,29 @@ function redistribute(delta, excludeItem) {
   });
 }
 
+// ── Maxwell ↔ Welcome drinks sync ────────────────────────────────────────────
+function syncWelcomeFromMaxwell(doRedistribute = true) {
+  const wdItem = categories.flatMap(c => c.items).find(i => i.maxwellLinked);
+  if (!wdItem || wdItem.locked) return;
+  const newRec = mxQuayles();
+  const delta = newRec - wdItem.recSpend;
+  if (delta === 0) return;
+  wdItem.recSpend = newRec;
+  if (doRedistribute) redistribute(delta, wdItem);
+}
+
 function toggleLock(ci, ii) {
   const item = categories[ci].items[ii];
   if (item.locked) {
-    // Unlock: recSpend stays frozen at the locked value — user can now edit it freely
     item.locked = false;
+    if (item.maxwellLinked) {
+      // Snap Budget spend back to Maxwell's Quayle's total
+      const newRec = mxQuayles();
+      const delta = newRec - item.recSpend;
+      item.recSpend = newRec;
+      if (delta !== 0) redistribute(delta, item);
+    }
+    // Non-linked: recSpend stays frozen at the locked value
   } else {
     // Lock: snap recSpend to current total cost (incl. tip) and redistribute delta
     const oldRecSpend = item.recSpend;
@@ -463,7 +514,7 @@ function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
 function parseDollar(str) { return parseInt(str.replace(/[^0-9]/g, ''), 10) || 0; }
 function parsePct(str) { return parseFloat(str.replace(/[^0-9.]/g, '')) || 0; }
 
-function renderAll() { renderMetrics(); renderTable(); renderChart(); renderUnlockedPanel(); }
+function renderAll() { renderMetrics(); renderTable(); renderChart(); renderUnlockedPanel(); renderMaxwell(); }
 
 function renderUnlockedPanel() {
   const list = document.getElementById('unlocked-list');
@@ -537,13 +588,15 @@ function renderTable() {
         ? `<span class="badge-variable">per head</span>`
         : `<span class="badge-fixed">fixed</span>`;
 
-      // Rec. Spend: editable when unlocked, static display when locked
+      // Budget Spend: locked → Actual spend; maxwell-linked → auto from Maxwell; else editable
       const recField = item.locked
         ? `<span class="locked-rec-val">${fmt(effRec)}</span>`
-        : `<input class="editable" type="text" value="${fmt(item.recSpend)}"
-            onchange="onRecSpendEdit(${ci},${ii},this.value)"
-            onblur="fmtRecSpendCell(this,${ci},${ii})"
-            onfocus="this.select()" />`;
+        : item.maxwellLinked
+          ? `<span class="maxwell-linked-val" title="Auto-linked to Maxwell's Quayle's total">${fmt(item.recSpend)}</span>`
+          : `<input class="editable" type="text" value="${fmt(item.recSpend)}"
+              onchange="onRecSpendEdit(${ci},${ii},this.value)"
+              onblur="fmtRecSpendCell(this,${ci},${ii})"
+              onfocus="this.select()" />`;
 
       // Cost: always editable
       const costField = item.variable
@@ -615,28 +668,56 @@ function setChartMode(mode) {
 }
 
 function renderChart() {
-  const labels = categories.map(c => c.name);
-  const data = chartMode === 'recommended'
-    ? categories.map(c => c.items.reduce((s, i) => s + Math.max(0, getEffectiveRec(i)), 0))
-    : categories.map(c => c.items.reduce((s, i) => s + getTotal(i), 0));
-  const colors = categories.map(c => c.color);
+  let labels, data, colors;
+
+  if (chartMode === 'recommended') {
+    labels = categories.map(c => c.name);
+    data   = categories.map(c => c.items.reduce((s, i) => s + Math.max(0, getEffectiveRec(i)), 0));
+    colors = categories.map(c => c.color);
+  } else {
+    // Actual mode: show only categories with spend > 0; group the rest as "Remaining"
+    const catTotals = categories.map(c => c.items.reduce((s, i) => s + getTotal(i), 0));
+    const nonZero   = categories.map((c, i) => i).filter(i => catTotals[i] > 0);
+    const totalSpent = catTotals.reduce((s, t) => s + t, 0);
+    const remaining  = Math.max(0, totalBudget - totalSpent);
+    labels = [...nonZero.map(i => categories[i].name), ...(remaining > 0 ? ['Remaining'] : [])];
+    data   = [...nonZero.map(i => catTotals[i]),        ...(remaining > 0 ? [remaining]   : [])];
+    colors = [...nonZero.map(i => categories[i].color), ...(remaining > 0 ? ['#c8bdb4']   : [])];
+  }
 
   const legendEl = document.getElementById('chart-legend');
   const total = data.reduce((a, b) => a + b, 0);
-  legendEl.innerHTML = categories.map((cat, i) => {
-    const pct = total > 0 ? ((data[i] / total) * 100).toFixed(0) : 0;
-    const amt = chartMode === 'recommended'
-      ? cat.items.reduce((s, j) => s + getEffectiveRec(j), 0)
-      : cat.items.reduce((s, j) => s + getTotal(j), 0);
-    return `<div class="legend-item">
-      <div class="legend-dot" style="background:${cat.color}"></div>
-      <span class="legend-name">${cat.name}</span>
-      <span class="legend-pct">${pct}%</span>
-      <span class="legend-amt">${fmt(amt)}</span>
-    </div>`;
-  }).join('');
 
-  if (donutChart) { donutChart.data.datasets[0].data = data; donutChart.update(); return; }
+  if (chartMode === 'recommended') {
+    legendEl.innerHTML = categories.map((cat, i) => {
+      const pct = total > 0 ? ((data[i] / total) * 100).toFixed(0) : 0;
+      const amt = cat.items.reduce((s, j) => s + getEffectiveRec(j), 0);
+      return `<div class="legend-item">
+        <div class="legend-dot" style="background:${cat.color}"></div>
+        <span class="legend-name">${cat.name}</span>
+        <span class="legend-pct">${pct}%</span>
+        <span class="legend-amt">${fmt(amt)}</span>
+      </div>`;
+    }).join('');
+  } else {
+    legendEl.innerHTML = labels.map((label, i) => {
+      const pct = total > 0 ? ((data[i] / total) * 100).toFixed(0) : 0;
+      return `<div class="legend-item">
+        <div class="legend-dot" style="background:${colors[i]}"></div>
+        <span class="legend-name">${label}</span>
+        <span class="legend-pct">${pct}%</span>
+        <span class="legend-amt">${fmt(data[i])}</span>
+      </div>`;
+    }).join('');
+  }
+
+  if (donutChart) {
+    donutChart.data.labels = labels;
+    donutChart.data.datasets[0].data = data;
+    donutChart.data.datasets[0].backgroundColor = colors;
+    donutChart.update();
+    return;
+  }
 
   const ctx = document.getElementById('donut-chart').getContext('2d');
   donutChart = new Chart(ctx, {
@@ -865,6 +946,116 @@ function submitAddExpense() {
   renderAll();
 }
 
+// ── Maxwell Trading module ────────────────────────────────────────────────────
+const maxwellItems = [
+  { name: 'Dinner – Food',     cost: 85,   count: 45,  tipPct: 30 },
+  { name: 'Dinner – Drink',    cost: 18,   count: 90,  tipPct: 30 },
+  { name: 'Open Bar Estimate', cost: 18,   count: 300, tipPct: 30 },
+  { name: 'Patio Rental',      cost: 2500, count: 1,   tipPct: 0  },
+  { name: 'Florals',           cost: 1500, count: 1,   tipPct: 0  },
+];
+let maxwellHowells = -9000;
+const MAXWELL_KEY = 'maxwell-data-v1';
+
+function mxFmt(n) {
+  const r = Math.round(n);
+  return r < 0 ? '($' + Math.abs(r).toLocaleString() + ')' : '$' + r.toLocaleString();
+}
+
+function mxParseDollar(str) {
+  const s = String(str).trim();
+  const isNeg = s.startsWith('-') || s.startsWith('(');
+  const num = parseFloat(s.replace(/[^0-9.]/g, '')) || 0;
+  return isNeg ? -num : num;
+}
+
+function mxParsePct(str) {
+  return parseFloat(String(str).replace(/[^0-9.]/g, '')) || 0;
+}
+
+function mxItemTotal(item) {
+  return Math.round(item.cost * item.count * (1 + item.tipPct / 100));
+}
+
+function mxGrandTotal() {
+  return maxwellItems.reduce((s, i) => s + mxItemTotal(i), 0);
+}
+
+function mxQuayles() {
+  return mxGrandTotal() + maxwellHowells;
+}
+
+function saveMxState() {
+  localStorage.setItem(MAXWELL_KEY, JSON.stringify({
+    items: maxwellItems.map(i => ({ cost: i.cost, count: i.count, tipPct: i.tipPct })),
+    howells: maxwellHowells
+  }));
+}
+
+function loadMxState() {
+  try {
+    const raw = localStorage.getItem(MAXWELL_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    if (saved.items) {
+      saved.items.forEach((s, i) => {
+        if (!maxwellItems[i]) return;
+        if (s.cost   != null) maxwellItems[i].cost   = s.cost;
+        if (s.count  != null) maxwellItems[i].count  = s.count;
+        if (s.tipPct != null) maxwellItems[i].tipPct = s.tipPct;
+      });
+    }
+    if (saved.howells != null) maxwellHowells = saved.howells;
+  } catch(e) {}
+}
+
+function mxEditCost(i, val)    { maxwellItems[i].cost   = Math.max(0, mxParseDollar(val)); saveMxState(); syncWelcomeFromMaxwell(true); saveState(); renderAll(); }
+function mxEditCount(i, val)   { maxwellItems[i].count  = Math.max(0, mxParseDollar(val)); saveMxState(); syncWelcomeFromMaxwell(true); saveState(); renderAll(); }
+function mxEditTip(i, val)     { maxwellItems[i].tipPct = Math.max(0, mxParsePct(val));    saveMxState(); syncWelcomeFromMaxwell(true); saveState(); renderAll(); }
+function mxEditHowells(val)    { maxwellHowells = mxParseDollar(val);                      saveMxState(); syncWelcomeFromMaxwell(true); saveState(); renderAll(); }
+
+function renderMaxwell() {
+  const tbody = document.getElementById('maxwell-tbody');
+  if (!tbody) return;
+  let html = '';
+
+  maxwellItems.forEach((item, i) => {
+    const total = mxItemTotal(item);
+    html += `<tr>
+      <td style="text-align:left;color:var(--text-muted);">${item.name}</td>
+      <td><input class="maxwell-input" type="text" value="$${item.cost.toLocaleString()}"
+          onblur="mxEditCost(${i},this.value)" onfocus="this.select()" /></td>
+      <td><input class="maxwell-input" type="text" value="${item.count}"
+          onblur="mxEditCount(${i},this.value)" onfocus="this.select()" /></td>
+      <td><input class="maxwell-input" type="text" value="${item.tipPct}%"
+          onblur="mxEditTip(${i},this.value)" onfocus="this.select()" /></td>
+      <td class="maxwell-total-col">${mxFmt(total)}</td>
+    </tr>`;
+  });
+
+  const gt = mxGrandTotal();
+  const hw = maxwellHowells;
+  const qy = mxQuayles();
+
+  html += `<tr class="maxwell-total">
+    <td colspan="4">Total</td>
+    <td class="maxwell-total-col">${mxFmt(gt)}</td>
+  </tr>
+  <tr class="maxwell-sub">
+    <td colspan="4">(Howell's)</td>
+    <td class="maxwell-total-col${hw < 0 ? ' mx-negative' : ''}" style="padding:0 7px;">
+      <input class="maxwell-input${hw < 0 ? ' mx-negative' : ''}" type="text" value="${mxFmt(hw)}"
+          onblur="mxEditHowells(this.value)" onfocus="this.select()" style="padding:5px 0;display:block;" />
+    </td>
+  </tr>
+  <tr class="maxwell-highlight">
+    <td colspan="4">Quayle's</td>
+    <td class="maxwell-total-col${qy < 0 ? ' mx-negative' : ''}">${mxFmt(qy)}</td>
+  </tr>`;
+
+  tbody.innerHTML = html;
+}
+
 // ── Share link (encode full state into URL hash) ──────────────────────────────
 function shareLink() {
   const state = {
@@ -953,6 +1144,9 @@ if (loadedFromHash) {
 } else {
   loadState();
 }
+loadMxState();
+syncWelcomeFromMaxwell(true);
+saveState();
 renderAll();
 </script>
 </body>
