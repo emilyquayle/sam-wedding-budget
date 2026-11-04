@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Sam Wedding Budget",
+  "schemaVersion": 1,
+  "description": "Interactive wedding budget tracker for Sam's wedding. Features: editable budget amounts, guest count slider that auto-updates per-head costs, category breakdown donut chart, and spend-vs-budget progress bars."
+}
+</script>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -350,7 +357,6 @@ const categories = [
     { name: "Catering",              recSpend: 22963, variable: true,  perHeadRate: 118, tipPct: 39, locked: true },
     { name: "Bar & beverages",       recSpend: 17319, variable: true,  perHeadRate: 89,  tipPct: 39, locked: true },
     { name: "Wedding cake",          recSpend: 600,   budgeted: 0,     variable: false, tipPct: 0,  locked: false },
-    { name: "Late night food",       recSpend: 2000,  budgeted: 0,     variable: false, tipPct: 0,  locked: false },
   ]},
   { name: "People", color: "#7a4f60", items: [
     { name: "Photographer",          recSpend: 7130,  budgeted: 6200,  variable: false, tipPct: 15, locked: true },
@@ -368,19 +374,20 @@ const categories = [
   ]},
   { name: "Music", color: "#e8c4b0", items: [
     { name: "DJ",                    recSpend: 5000,  budgeted: 0,     variable: false, tipPct: 15, locked: false },
-    { name: "Live music component",  recSpend: 2000,  budgeted: 0,     variable: false, tipPct: 0,  locked: false },
   ]},
   { name: "Other", color: "#c4a882", items: [
     { name: "Invitations & postage", recSpend: 750,   budgeted: 0,     variable: false, tipPct: 0,  locked: false },
+    { name: "Save the dates",        recSpend: 0,     budgeted: 0,     variable: false, tipPct: 0,  locked: false },
     { name: "Favors",                recSpend: 500,   budgeted: 0,     variable: false, tipPct: 0,  locked: false },
-    { name: "Buffer / misc.",        recSpend: 1899,  budgeted: 0,     variable: false, tipPct: 0,  locked: false },
+    { name: "Bridal suite",          recSpend: 0,     budgeted: 0,     variable: false, tipPct: 0,  locked: false },
+    { name: "Buffer / misc.",        recSpend: 5899,  budgeted: 0,     variable: false, tipPct: 0,  locked: false },
   ]},
 ];
 
 let totalBudget = 100000;
 let guests = 140;
 
-const STORAGE_KEY = 'wedding-budget-data-v4';
+const STORAGE_KEY = 'wedding-budget-data-v5';
 
 function itemKey(cat, item) { return cat.name + '::' + item.name; }
 
