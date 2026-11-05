@@ -139,7 +139,7 @@
   td.rec-adjusted { color: var(--text-main); font-weight: 400; }
   td.rec-spend-col .editable { font-weight: 400; }
 
-  /* Column group separators — scoped to main budget table only */
+  /* Column group separators â scoped to main budget table only */
   .table-wrap thead th:nth-child(4), .table-wrap tbody td:nth-child(4) { border-left: 2px solid var(--border); padding-left: 18px; padding-right: 18px; }
   .table-wrap thead th:nth-child(5), .table-wrap tbody td:nth-child(5) { padding-left: 0; padding-right: 0; }
   .table-wrap thead th:nth-child(6), .table-wrap tbody td:nth-child(6) { padding-left: 18px; padding-right: 18px; }
@@ -163,7 +163,7 @@
   .unlocked-panel { background: var(--sand-light); border: 0.5px solid var(--border); border-radius: 12px; padding: 18px; width: 249px; flex-shrink: 0; height: 380px; overflow-y: auto; }
   .unlocked-panel .chart-title { margin-bottom: 10px; }
 
-  .maxwell-panel { background: var(--sand-light); border: 0.5px solid var(--border); border-radius: 12px; padding: 18px; flex: 1; height: 380px; overflow-y: auto; }
+  .maxwell-panel { background: var(--sand-light); border: 0.5px solid var(--border); border-radius: 12px; padding: 18px; flex: 1; height: 380px; overflow%y: auto; }
   .maxwell-panel .chart-title { margin-bottom: 10px; }
   .maxwell-table { width: 100%; border-collapse: collapse; font-family: 'Playfair Display', serif; table-layout: fixed; }
   .maxwell-table thead th { font-size: 12px; font-weight: 600; color: var(--burgundy); padding: 5px 7px; text-align: center; border-bottom: 1px solid var(--border); background: var(--sand); }
@@ -195,15 +195,15 @@
 
   <div class="page-header">
     <div>
-      <div class="page-title"><span class="heart">♥</span> Sam's wedding budget</div>
-      <div class="page-sub">Interactive tracker · adjust guests and budgets inline</div>
+      <div class="page-title"><span class="heart">â¥</span> Sam's wedding budget</div>
+      <div class="page-sub">Interactive tracker Â· adjust guests and budgets inline</div>
     </div>
     <div style="display:flex;align-items:flex-end;gap:10px;">
       <div class="budget-edit">
         <label for="total-budget-input">Total budget</label>
         <input id="total-budget-input" type="text" value="$100,000" onblur="onTotalBudgetChange(this.value)" onfocus="this.select()" />
       </div>
-      <button class="share-btn" id="share-btn" onclick="shareLink()">⤴ Share link</button>
+      <button class="share-btn" id="share-btn" onclick="shareLink()">â¤´ Share link</button>
     </div>
   </div>
 
@@ -215,10 +215,10 @@
   </div>
 
   <div class="guest-panel">
-    <span class="guest-icon">👥</span>
+    <span class="guest-icon">ð¥</span>
     <label for="guest-slider">Number of guests (updates variable costs automatically)</label>
-    <input type="range" id="guest-slider" min="20" max="400" step="5" value="140" oninput="onGuestsChange(this.value)" />
-    <span class="guest-count-val" id="guest-label">140 guests</span>
+    <input type="range" id="guest-slider" min="20" max="400" step="5" value="130" oninput="onGuestsChange(this.value)" />
+    <span class="guest-count-val" id="guest-label">130 guests</span>
   </div>
 
   <div class="panels-row">
@@ -272,7 +272,7 @@
     </table>
   </div>
 
-  <button class="add-expense-btn" onclick="showAddModal()">＋ Add expense</button>
+  <button class="add-expense-btn" onclick="showAddModal()">ï¼ Add expense</button>
 
   <!-- Share modal -->
   <div class="modal-overlay" id="share-modal" onclick="if(event.target===this)hideShareModal()">
@@ -284,7 +284,7 @@
         <button id="copy-share-btn" onclick="copyShareUrl()">Copy</button>
       </div>
       <div class="share-modal-note" id="share-note" style="display:none">
-        ⚠ You're not on a hosted URL yet — this is just the data token. Deploy the HTML file to Netlify or GitHub Pages first, then open it from there and click Share link again to get a full shareable URL.
+        â  You're not on a hosted URL yet â this is just the data token. Deploy the HTML file to Netlify or GitHub Pages first, then open it from there and click Share link again to get a full shareable URL.
       </div>
       <div class="modal-actions" style="margin-top:16px;">
         <button class="btn-cancel" onclick="hideShareModal()">Close</button>
@@ -324,7 +324,7 @@
         <input type="text" id="m-tip-modal" placeholder="0" value="0" />
       </div>
       <div class="modal-field">
-        <label>Rec. spend ($) <span style="font-weight:400;text-transform:none;letter-spacing:0">&nbsp;—&nbsp;leave blank to auto-fill from cost</span></label>
+        <label>Rec. spend ($) <span style="font-weight:400;text-transform:none;letter-spacing:0">&nbsp;â&nbsp;leave blank to auto-fill from cost</span></label>
         <input type="text" id="m-rec" placeholder="auto" />
       </div>
       <div class="modal-actions">
@@ -336,7 +336,7 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbN5OhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <script>
 const categories = [
   { name: "Venue & ceremony", color: "#5d2e46", items: [
@@ -344,43 +344,43 @@ const categories = [
     { name: "Ceremony space",        recSpend: 1390,  budgeted: 1000,  variable: false, tipPct: 39, locked: true },
   ]},
   { name: "Friday festivities", color: "#d4a5a5", items: [
-    { name: "Welcome drinks",        recSpend: 9099,  budgeted: 0,     variable: false, tipPct: 0,  locked: false, maxwellLinked: true },
+    { name: "Welcome drinks",        recSpend: 3000,  budgeted: 0,     variable: false, tipPct: 0,  locked: false, maxwellLinked: true },
   ]},
   { name: "Food & drink", color: "#b87d6d", items: [
-    { name: "Catering",              recSpend: 22963, variable: true,  perHeadRate: 118, tipPct: 39, locked: true },
-    { name: "Bar & beverages",       recSpend: 17319, variable: true,  perHeadRate: 89,  tipPct: 39, locked: true },
+    { name: "Catering",              recSpend: 21323, variable: true,  perHeadRate: 118, tipPct: 39, locked: true },
+    { name: "Bar & beverages",       recSpend: 16082, variable: true,  perHeadRate: 89,  tipPct: 39, locked: true },
     { name: "Wedding cake",          recSpend: 600,   budgeted: 0,     variable: false, tipPct: 0,  locked: false },
   ]},
   { name: "People", color: "#7a4f60", items: [
     { name: "Photographer",          recSpend: 7130,  budgeted: 6200,  variable: false, tipPct: 15, locked: true },
-    { name: "Planner",               recSpend: 3000,  budgeted: 0,     variable: false, tipPct: 0,  locked: false },
+    { name: "Planner",               recSpend: 2820,  budgeted: 2820,  variable: false, tipPct: 0,  locked: true },
   ]},
-  { name: "Florals & décor", color: "#c4967a", items: [
-    { name: "Floral arrangements",   recSpend: 5000,  budgeted: 0,     variable: false, tipPct: 0,  locked: false },
-    { name: "Centerpieces",          recSpend: 3000,  budgeted: 0,     variable: false, tipPct: 0,  locked: false },
-    { name: "Lighting",              recSpend: 3000,  budgeted: 0,     variable: false, tipPct: 0,  locked: false },
+  { name: "Florals & dÃ©cor", color: "#c4967a", items: [
+    { name: "Floral arrangements",   recSpend: 5000,  budgeted: 5000,  variable: false, tipPct: 0,  locked: true },
+    { name: "Centerpieces",          recSpend: 3000,  budgeted: 3000,  variable: false, tipPct: 0,  locked: true },
+    { name: "Lighting",              recSpend: 1594,  budgeted: 1594,  variable: false, tipPct: 0,  locked: true },
     { name: "Linens",                recSpend: 1000,  budgeted: 0,     variable: false, tipPct: 0,  locked: false },
   ]},
   { name: "Attire & beauty", color: "#9e6b7a", items: [
-    { name: "Wedding dress",         recSpend: 5000,  budgeted: 0,     variable: false, tipPct: 0,  locked: false },
-    { name: "Hair & makeup",         recSpend: 2400,  budgeted: 0,     variable: false, tipPct: 20, locked: false },
+    { name: "Wedding dress",         recSpend: 4459,  budgeted: 4459,  variable: false, tipPct: 0,  locked: true },
+    { name: "Hair & makeup",         recSpend: 5100,  budgeted: 5100,  variable: false, tipPct: 0,  locked: true },
   ]},
   { name: "Music", color: "#e8c4b0", items: [
-    { name: "DJ",                    recSpend: 5000,  budgeted: 0,     variable: false, tipPct: 15, locked: false },
+    { name: "DJ",                    recSpend: 4888,  budgeted: 4250,  variable: false, tipPct: 15, locked: true },
   ]},
   { name: "Other", color: "#c4a882", items: [
     { name: "Invitations & postage", recSpend: 750,   budgeted: 0,     variable: false, tipPct: 0,  locked: false },
-    { name: "Save the dates",        recSpend: 0,     budgeted: 0,     variable: false, tipPct: 0,  locked: false },
+    { name: "Save the dates",        recSpend: 251,   budgeted: 251,   variable: false, tipPct: 0,  locked: true },
     { name: "Favors",                recSpend: 500,   budgeted: 0,     variable: false, tipPct: 0,  locked: false },
-    { name: "Bridal suite",          recSpend: 0,     budgeted: 0,     variable: false, tipPct: 0,  locked: false },
-    { name: "Buffer / misc.",        recSpend: 5899,  budgeted: 0,     variable: false, tipPct: 0,  locked: false },
+    { name: "Bridal suite",          recSpend: 2137,  budgeted: 2137,  variable: false, tipPct: 0,  locked: true },
+    { name: "Buffer / misc.",        recSpend: 12026, budgeted: 0,     variable: false, tipPct: 0,  locked: false },
   ]},
 ];
 
 let totalBudget = 100000;
-let guests = 140;
+let guests = 130;
 
-const STORAGE_KEY = 'wedding-budget-data-v5';
+const STORAGE_KEY = 'wedding-budget-data-v6';
 
 function itemKey(cat, item) { return cat.name + '::' + item.name; }
 
@@ -452,7 +452,7 @@ function redistribute(delta, excludeItem) {
   if (delta === 0) return;
   const bufItem = findBuffer();
   if (bufItem && bufItem !== excludeItem && !bufItem.locked) {
-    bufItem.recSpend -= delta;   // positive delta → buffer shrinks; negative → buffer grows
+    bufItem.recSpend -= delta;   // positive delta â buffer shrinks; negative â buffer grows
     return;
   }
   // Fallback: proportional spread across other unlocked items
@@ -476,7 +476,7 @@ function redistribute(delta, excludeItem) {
   });
 }
 
-// ── Maxwell ↔ Welcome drinks sync ────────────────────────────────────────────
+// ââ Maxwell â Welcome drinks sync ââââââââââââââââââââââââââââââââââââââââââââ
 function syncWelcomeFromMaxwell(doRedistribute = true) {
   const wdItem = categories.flatMap(c => c.items).find(i => i.maxwellLinked);
   if (!wdItem || wdItem.locked) return;
@@ -529,7 +529,7 @@ function renderUnlockedPanel() {
     const isNeg = item.recSpend < 0;
     return `<div class="unlocked-item">
       <span class="unlocked-name">${item.name}</span>
-      <span class="unlocked-val${isNeg ? ' rec-negative' : ''}">${fmt(item.recSpend)}${isNeg ? ' ⚠' : ''}</span>
+      <span class="unlocked-val${isNeg ? ' rec-negative' : ''}">${fmt(item.recSpend)}${isNeg ? ' â ' : ''}</span>
     </div>`;
   }).join('');
 }
@@ -562,7 +562,7 @@ function renderTable() {
     const catRecPct = totalBudget > 0 ? (catRec   / totalBudget * 100).toFixed(1) : '0.0';
 
     html += `<tr class="cat-row" onclick="toggleCat(${ci})">
-      <td><div style="display:flex;align-items:center;gap:5px;">▾
+      <td><div style="display:flex;align-items:center;gap:5px;">â¾
         <input class="cat-name-input" type="text" value="${cat.name.replace(/"/g, '&quot;')}"
           onchange="onCatNameEdit(${ci},this.value)"
           onfocus="this.select()" onclick="event.stopPropagation()" />
@@ -571,7 +571,7 @@ function renderTable() {
       <td class="num">${fmt(catRec)}</td>
       <td class="num">${fmt(catCost)}</td>
       <td class="lock-col"></td>
-      <td class="num">—</td>
+      <td class="num">â</td>
       <td class="num">${catActPct}%</td>
       <td class="num"><strong>${fmt(catTotal)}</strong></td>
     </tr>`;
@@ -588,7 +588,7 @@ function renderTable() {
         ? `<span class="badge-variable">per head</span>`
         : `<span class="badge-fixed">fixed</span>`;
 
-      // Budget Spend: locked → Actual spend; maxwell-linked → auto from Maxwell; else editable
+      // Budget Spend: locked â Actual spend; maxwell-linked â auto from Maxwell; else editable
       const recField = item.locked
         ? `<span class="locked-rec-val">${fmt(effRec)}</span>`
         : item.maxwellLinked
@@ -604,21 +604,21 @@ function renderTable() {
             onchange="onRateEdit(${ci},${ii},this.value)"
             onblur="fmtRateCell(this,${ci},${ii})"
             onfocus="this.select()"
-            title="Per-head rate — total updates automatically with guest count" />`
+            title="Per-head rate â total updates automatically with guest count" />`
         : `<input class="editable" type="text" value="${fmt(budgeted)}"
             onchange="onBudgetEdit(${ci},${ii},this.value)"
             onblur="fmtBudgetCell(this,${ci},${ii})"
             onfocus="this.select()" />`;
 
       const lockBtn = `<button class="lock-btn ${item.locked ? 'locked' : ''}" onclick="toggleLock(${ci},${ii})"
-          title="${item.locked ? 'Unlock — rec. spend stays frozen at locked value' : 'Lock — rec. spend will match total cost (incl. tip)'}">${item.locked ? '🔒' : '🔓'}</button>`;
+          title="${item.locked ? 'Unlock â rec. spend stays frozen at locked value' : 'Lock â rec. spend will match total cost (incl. tip)'}">${item.locked ? 'ð' : 'ð'}</button>`;
 
       html += `<tr data-cat="${ci}" data-item="${ii}" class="${item.locked ? 'locked-row' : ''}">
         <td><div class="expense-name">
           <input class="name-input" type="text" value="${item.name.replace(/"/g, '&quot;')}"
             onchange="onNameEdit(${ci},${ii},this.value)" onfocus="this.select()" />
           ${badge}
-          <button class="del-btn" onclick="deleteItem(${ci},${ii})" title="Remove this expense">✕</button>
+          <button class="del-btn" onclick="deleteItem(${ci},${ii})" title="Remove this expense">â</button>
         </div></td>
         <td class="num${item.locked ? ' rec-adjusted' : (effRec < 0 ? ' rec-negative' : '')}">${recPct}%</td>
         <td class="num rec-spend-col${item.locked ? ' rec-adjusted' : (effRec < 0 ? ' rec-negative' : '')}">${recField}</td>
@@ -649,7 +649,7 @@ function renderTable() {
     <td class="num">${fmt(totalRec)}</td>
     <td class="num">${fmt(totalPre)}</td>
     <td class="lock-col"></td>
-    <td class="num">—</td>
+    <td class="num">â</td>
     <td class="num">${totalActPct}%</td>
     <td class="num"><strong>${fmt(totalPost)}</strong></td>
   </tr>`;
@@ -861,21 +861,21 @@ function toggleCat(ci) {
   });
 }
 
-// ── Category name editing ─────────────────────────────────────────────────────
+// ââ Category name editing âââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function onCatNameEdit(ci, val) {
   const trimmed = val.trim();
   if (trimmed) categories[ci].name = trimmed;
   saveState(); // don't re-render to avoid disrupting focus
 }
 
-// ── Expense name editing ──────────────────────────────────────────────────────
+// ââ Expense name editing ââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function onNameEdit(ci, ii, val) {
   const trimmed = val.trim();
   if (trimmed) categories[ci].items[ii].name = trimmed;
   saveState(); // don't re-render so focus isn't lost
 }
 
-// ── Delete expense ────────────────────────────────────────────────────────────
+// ââ Delete expense ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 function deleteItem(ci, ii) {
   const item = categories[ci].items[ii];
   if (!confirm(`Remove "${item.name}" from the budget?`)) return;
@@ -888,7 +888,7 @@ function deleteItem(ci, ii) {
   renderAll();
 }
 
-// ── Add expense modal ─────────────────────────────────────────────────────────
+// ââ Add expense modal âââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 let addType = 'fixed';
 
 function showAddModal() {
@@ -946,10 +946,10 @@ function submitAddExpense() {
   renderAll();
 }
 
-// ── Maxwell Trading module ────────────────────────────────────────────────────
+// ââ Maxwell Trading module ââââââââââââââââââââââââââââââââââââââââââââââââââââ
 const maxwellItems = [
-  { name: 'Dinner – Food',     cost: 85,   count: 45,  tipPct: 30 },
-  { name: 'Dinner – Drink',    cost: 18,   count: 90,  tipPct: 30 },
+  { name: 'Dinner â Food',     cost: 85,   count: 45,  tipPct: 30 },
+  { name: 'Dinner â Drink',    cost: 18,   count: 90,  tipPct: 30 },
   { name: 'Open Bar Estimate', cost: 18,   count: 300, tipPct: 30 },
   { name: 'Patio Rental',      cost: 2500, count: 1,   tipPct: 0  },
   { name: 'Florals',           cost: 1500, count: 1,   tipPct: 0  },
@@ -1056,7 +1056,7 @@ function renderMaxwell() {
   tbody.innerHTML = html;
 }
 
-// ── Share link (encode full state into URL hash) ──────────────────────────────
+// ââ Share link (encode full state into URL hash) ââââââââââââââââââââââââââââââ
 function shareLink() {
   const state = {
     v: 1,
@@ -1100,7 +1100,7 @@ function copyShareUrl() {
   navigator.clipboard.writeText(inp.value).then(() => {
     const btn = document.getElementById('copy-share-btn');
     const orig = btn.textContent;
-    btn.textContent = '✓ Copied!';
+    btn.textContent = 'â Copied!';
     btn.style.background = '#6b8f71';
     setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 2000);
   }).catch(() => {
@@ -1108,7 +1108,7 @@ function copyShareUrl() {
   });
 }
 
-// ── Load shared state from URL hash ──────────────────────────────────────────
+// ââ Load shared state from URL hash ââââââââââââââââââââââââââââââââââââââââââ
 function loadFromHash() {
   const hash = window.location.hash.slice(1);
   if (!hash) return false;
@@ -1132,7 +1132,7 @@ function loadFromHash() {
   } catch(e) { return false; }
 }
 
-// ── Init ──────────────────────────────────────────────────────────────────────
+// ââ Init ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
 const loadedFromHash = loadFromHash();
 if (loadedFromHash) {
   // Apply shared state: update UI, persist to sister's localStorage, clean URL
